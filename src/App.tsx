@@ -1,34 +1,58 @@
 import React from 'react';
 import axios from 'axios';
-
+import TwitchGame from '../types/twitchgame.type.ts'
 import './App.css';
 
-function App() {
-  const listTwitchGames = {
-    method: 'GET',
-    url: 'https://twitch-game-popularity.p.rapidapi.com/games',
-    headers: {
-      'X-RapidAPI-Key': '642de38df0msh16c47a2b6d94672p1ead6fjsnd5cdeb6bfb68',
-      'X-RapidAPI-Host': 'twitch-game-popularity.p.rapidapi.com'
-    }
-  };
+const App = () => {
 
-  axios.request(listTwitchGames).then(function (response) {
-  	console.log(response.data);
-  }).catch(function (error) {
-  	console.error(error);
-  });
+  const [posts, setPosts]: [TwitchGame[], (posts: TwitchGame[]) => void]= React.useState(defaultPosts);
+
+  const [loading, setLoading]: [boolean, (loading: boolean) => void] = React.useState<boolean>(true);
+
+  const [error, setError]: [string, (error: string) => void] = React.useState("");
+
+  React.useEffect(() => {
+    axios.get<TwitchGame[]>('https://twitch-game-popularity.p.rapidapi.com/games', {
+      headers: {
+      'X-RapidAPI-Key': ${process.env.API_KEY},
+      'X-RapidAPI-Host': 'twitch-game-popularity.p.rapidapi.com'
+      },
+    });
+  }, []);
+
+  React.useEffect(() => {
+  axios
+    .get<TwitchGame[]>(...)
+    .then(response => {
+      setPosts(response.data);
+      setLoading(false);
+    });
+},
+
+React.useEffect(() => {
+  axios
+    .get<TwitchGame[]>(...)
+    .then(...)
+    .catch(ex => {
+      const error =
+      ex.response.status === 404
+        ? "Resource Not found"
+        : "An unexpected error has occurred";
+      setError(error);
+      setLoading(false);
+    });
+}, []);
   return (
     <div className="App">
       <h1 className="siteTitle">Twitch Hub</h1>
-      {
-        listTwitchGames.map(({game, index}: {game: (param: any) => void; index: number}) => {
-          return(
-            {[(game(10))]}
-            key={index}
-          );
-        })
-      }
+        <ul className="postList">
+          {posts.map((post)=> (
+            <li key={post.id}>
+            <h2>{post.name}</h2>
+            </li>
+          ))}
+        </ul>
+        {error && <p className="error">{error}</p>}
     </div>
   );
 }
