@@ -1,9 +1,10 @@
 import React from 'react';
 import axios from 'axios';
-import TwitchGame from '../types/twitchgame.type.ts'
+import TwitchGame from './types/twitchgame.type'
 import './App.css';
 
 const App = () => {
+  const defaultPosts:TwitchGame[] = [];
 
   const [posts, setPosts]: [TwitchGame[], (posts: TwitchGame[]) => void]= React.useState(defaultPosts);
 
@@ -14,26 +15,16 @@ const App = () => {
   React.useEffect(() => {
     axios.get<TwitchGame[]>('https://twitch-game-popularity.p.rapidapi.com/games', {
       headers: {
-      'X-RapidAPI-Key': ${process.env.API_KEY},
+      'X-RapidAPI-Key': `${process.env.REACT_APP_API_KEY}`,
       'X-RapidAPI-Host': 'twitch-game-popularity.p.rapidapi.com'
       },
-    });
-  }, []);
-
-  React.useEffect(() => {
-  axios
-    .get<TwitchGame[]>(...)
-    .then(response => {
+    }).then(response => {
+      console.log(response);
       setPosts(response.data);
       setLoading(false);
-    });
-},
-
-React.useEffect(() => {
-  axios
-    .get<TwitchGame[]>(...)
-    .then(...)
-    .catch(ex => {
+    }).catch(ex => {
+      console.log (ex);
+      console.log(process.env.API_KEY)
       const error =
       ex.response.status === 404
         ? "Resource Not found"
@@ -41,14 +32,15 @@ React.useEffect(() => {
       setError(error);
       setLoading(false);
     });
-}, []);
+  }, []);
+
   return (
     <div className="App">
       <h1 className="siteTitle">Twitch Hub</h1>
         <ul className="postList">
-          {posts.map((post)=> (
+          {posts.filter((x): x is TwitchGame => x !== null).map((post)=> (
             <li key={post.id}>
-            <h2>{post.name}</h2>
+            <h2>{post.Name}</h2>
             </li>
           ))}
         </ul>
