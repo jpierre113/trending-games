@@ -1,6 +1,4 @@
 export default interface TwitchGame {
   id: number;
-  title: string;
+  Name: string;
 }
-
-const defaultPost:TwitchGame[] = [];
