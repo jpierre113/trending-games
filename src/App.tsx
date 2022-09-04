@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import TwitchGame from './types/twitchgame.type'
 import './App.css';
@@ -6,13 +6,13 @@ import './App.css';
 const App = () => {
   const defaultPosts:TwitchGame[] = [];
 
-  const [posts, setPosts]: [TwitchGame[], (posts: TwitchGame[]) => void]= React.useState(defaultPosts);
+  const [posts, setPosts]: [TwitchGame[], (posts: TwitchGame[]) => void]= useState(defaultPosts);
 
-  const [loading, setLoading]: [boolean, (loading: boolean) => void] = React.useState<boolean>(true);
+  const [loading, setLoading]: [boolean, (loading: boolean) => void] = useState<boolean>(true);
 
-  const [error, setError]: [string, (error: string) => void] = React.useState("");
+  const [error, setError]: [string, (error: string) => void] = useState("");
 
-  React.useEffect(() => {
+  useEffect(() => {
     axios.get<TwitchGame[]>('https://twitch-game-popularity.p.rapidapi.com/games', {
       headers: {
       'X-RapidAPI-Key': `${process.env.REACT_APP_API_KEY}`,
@@ -24,11 +24,8 @@ const App = () => {
       setLoading(false);
     }).catch(ex => {
       console.log (ex);
-      console.log(process.env.API_KEY)
       const error =
-      ex.response.status === 404
-        ? "Resource Not found"
-        : "An unexpected error has occurred";
+      ex.response.status === 404 ? "Resource Not found" : "An unexpected error has occurred";
       setError(error);
       setLoading(false);
     });
