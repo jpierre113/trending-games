@@ -1,6 +1,6 @@
 .pagination {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   list-style: none;
   cursor: pointer;
 }
@@ -26,12 +26,6 @@
   border: 1px solid rgb(198, 197, 202);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -47,11 +41,6 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.postList{
+  list-style: none;
 }
